@@ -5,7 +5,8 @@
   "homepage": "https://codelabs.developers.google.com/codelabs/your-first-pwapp/",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start-nodemon": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.16.4",
