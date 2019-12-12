@@ -19,6 +19,8 @@
 'use strict';
 
 const express = require('express');
+const path = require('path');
+
 const fetch = require('node-fetch');
 const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
@@ -33,7 +35,10 @@ const FORECAST_DELAY = 0;
 //const API_KEY = process.env.DARKSKY_API_KEY;
 // CODELAB: Or get the Dark Sky API key from ./env.js...
 const API_KEY = env.DARKSKY_API_KEY;
-console.log(`SHEMP: Moe API_KEY = `, API_KEY );
+console.log(`SHEMP: Moe, API_KEY = `, API_KEY );
+
+const LISTEN_PORT = env.LISTEN_PORT;
+console.log(`SHEMP: Moe, LISTEN_PORT = `, LISTEN_PORT );
 
 const BASE_URL = `https://api.darksky.net/forecast`;
 
@@ -129,7 +134,7 @@ const fakeForecast = {
  * @return {Object} forecast object.
  */
 function generateFakeForecast(location) {
-  location = location || '40.7720232,-73.9732319';
+  location = location || '40.7720232,-73.9732319'; // Defaults to NYC
   const commaAt = location.indexOf(',');
 
   // Create a new copy of the forecast
@@ -174,7 +179,9 @@ function startServer() {
   const app = express();
 
   // Redirect HTTP to HTTPS,
-  app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
+  // NOTE: Don't use this if NginX is already re-directing to https, or else
+  // you'll get endless redirects and ERR_TOO_MANY_REDIRECTS
+  //app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 
   // Logging for each request
   app.use((req, resp, next) => {
@@ -192,13 +199,29 @@ function startServer() {
   app.get('/forecast/', getForecast);
   app.get('/forecast', getForecast);
 
+  // And if it comes in via reverse-proxy prefix, too...
+  //app.get('/weather-pwa/forecast/:location', getForecast);
+  //app.get('/weather-pwa/forecast/', getForecast);
+  //app.get('/weather-pwa/forecast', getForecast);
+
+ 
+  //const fileAssets = express.static(path.join(__dirname, './public'))
+
+  //const fileAssets = express.static('public')
+  //app.use('/weather-pwa', fileAssets) 
+  //app.use(fileAssets) 
+
+
   // Handle requests for static files
   app.use(express.static('public'));
 
+  // And if it comes in via reverse-proxy prefix, too...
+  //app.use('/weather-pwa', express.static('public'));
+
   // Start the server
-  return app.listen('8000', () => {
+  return app.listen(LISTEN_PORT, () => {
     // eslint-disable-next-line no-console
-    console.log('Local DevServer Started on port 8000...');
+    console.log(`Local DevServer Started on port ${LISTEN_PORT}...`);
   });
 }
 
