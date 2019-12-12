@@ -183,6 +183,25 @@ function startServer() {
   // you'll get endless redirects and ERR_TOO_MANY_REDIRECTS
   //app.use(redirectToHTTPS([/localhost:(\d{4})/], [], 301));
 
+  // Re-writes, anyone...?
+  // https://stackoverflow.com/questions/13446030/rewrite-url-path-using-node-js
+  //app.use(function(req, res, next) {
+    //if (req.url.slice(-1) === '/') {
+    //  req.url = req.url.slice(0, -1);
+    //}
+    //next();
+
+	// Remove leading / if not /forecast...
+    //console.log(`req.url = '${req.url}'...`);
+    //console.log(`req.path = '${req.path}'...`);
+    //if (req.url.length > 1 && req.url.substring(0,1) === '/' && req.url.indexOf("forecast")!=1 ) {
+    //  let reqUrlOriginal = req.url;
+    //  req.url = req.url.substring(1);
+    //  console.log(`Rewrote url without leading /: ${reqUrlOriginal} --> ${req.url}...`);
+    //}
+    //next();
+  //});
+
   // Logging for each request
   app.use((req, resp, next) => {
     const now = new Date();
@@ -199,24 +218,8 @@ function startServer() {
   app.get('/forecast/', getForecast);
   app.get('/forecast', getForecast);
 
-  // And if it comes in via reverse-proxy prefix, too...
-  //app.get('/weather-pwa/forecast/:location', getForecast);
-  //app.get('/weather-pwa/forecast/', getForecast);
-  //app.get('/weather-pwa/forecast', getForecast);
-
- 
-  //const fileAssets = express.static(path.join(__dirname, './public'))
-
-  //const fileAssets = express.static('public')
-  //app.use('/weather-pwa', fileAssets) 
-  //app.use(fileAssets) 
-
-
   // Handle requests for static files
   app.use(express.static('public'));
-
-  // And if it comes in via reverse-proxy prefix, too...
-  //app.use('/weather-pwa', express.static('public'));
 
   // Start the server
   return app.listen(LISTEN_PORT, () => {
