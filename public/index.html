@@ -28,9 +28,23 @@
   <link rel="icon" href="/weather-pwa/images/favicon.ico" type="image/x-icon" />
 
   <!-- CODELAB: Add link rel manifest -->
+  <link rel="manifest" href="/weather-pwa/manifest.json">
+
   <!-- CODELAB: Add iOS meta tags and icons -->
+  <!--
+    Safari on iOS doesn't support the web app manifest (yet),
+    so you'll need to add the traditional meta tags to the <head> of your index.html file...
+  -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Weather PWA">
+  <link rel="apple-touch-icon" href="/weather-pwa/images/icons/icon-152x152.png">
+
   <!-- CODELAB: Add description here -->
+  <meta name="description" content="A sample weather app">
+
   <!-- CODELAB: Add meta theme-color -->
+  <meta name="theme-color" content="#2F3BA2" />
 
 </head>
 <body>
