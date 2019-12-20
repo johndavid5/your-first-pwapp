@@ -215,9 +215,18 @@
 
   <script src="/weather-pwa/scripts/luxon-1.11.4.js"></script>
   <script src="/weather-pwa/scripts/app.js"></script>
+
   <!-- CODELAB: Add the install script here -->
   <script>
     // CODELAB: Register service worker.
+    if('serviceWorker' in navigator){
+		window.addEventListener('load', () => {	
+			navigator.serviceWorker.register('/weather-pwa/service-worker.js')
+			.then((reg)=>{
+				console.log('SHEMP: Moe, dha "service worker" is registered.', reg);
+			});
+		});/* windowAddEventListener('load'...) */
+	}/* if('serviceWorker' in navigator) */
   </script>
 
 </body>
