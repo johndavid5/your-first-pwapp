@@ -17,8 +17,9 @@
  */
 'use strict';
 
-// CODELAB: Update cache names any time any of the cached files change.
-const CACHE_NAME = 'static-cache-v2';
+// CODELAB: Update cache names any time any of the cached files change...
+// ...this will cause the caches to re-load with fresh stuff...
+const CACHE_NAME = 'static-cache-v3';
 const DATA_CACHE_NAME = 'data-cache-v1';
 
 // CODELAB: Add list of files to cache here.

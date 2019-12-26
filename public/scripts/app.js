@@ -233,6 +233,8 @@ function updateData() {
 
   let sWho = "updateData";
 
+  console.log(`${sWho}(): SHEMP: Here goes, Moe...`);
+
   Object.keys(weatherApp.selectedLocations).forEach((key) => {
     const location = weatherApp.selectedLocations[key];
     const card = getForecastCard(location);
