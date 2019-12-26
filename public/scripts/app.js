@@ -72,8 +72,14 @@ function removeLocation(evt) {
  * @param {Object} data Weather forecast data to update the element with.
  */
 function renderForecast(card, data) {
+
+  let sWho = "renderForecast";
+
+  console.log(`${sWho}(): SHEMP: Moe, got data = `, data );
+
   if (!data) {
     // There's no data, skip the update.
+    console.log(`${sWho}(): SHEMP: Looks like dha data is falsie, Moe, so not doin' no renderin'...`);
     return;
   }
 
@@ -84,8 +90,10 @@ function renderForecast(card, data) {
 
   // If the data on the element is newer, skip the update.
   if (lastUpdated >= data.currently.time) {
+    console.log(`${sWho}(): SHEMP: Sorry, Moe, looks like dha data on dha element is newer dhan the data in the data, so skippin' dha updated...`);
     return;
   }
+
   cardLastUpdatedElem.textContent = data.currently.time;
 
   // Render the forecast data into the card.
@@ -134,6 +142,7 @@ function renderForecast(card, data) {
 
   // If the loading spinner is still visible, remove it.
   const spinner = card.querySelector('.card-spinner');
+
   if (spinner) {
     card.removeChild(spinner);
   }
@@ -162,9 +171,31 @@ function getForecastFromNetwork(coords) {
  * @return {Object} The weather forecast, if the request fails, return null.
  */
 function getForecastFromCache(coords) {
-  // CODELAB: Add code to get weather forecast from the caches object.
 
-}
+  let sWho = 'getForecastFromCache'
+
+  // CODELAB: Add code to get weather forecast from the caches object.
+  if(!('caches' in window)){
+    console.log(`${sWho}(): Sorry, Moe, no caches found in window...returning null...`);
+    return null;
+  }
+
+  const url = `${window.location.origin}/forecast/${coords}`;
+  console.log(`${sWho}(): SHEMP: Moe, lookin' to see if url = \${window.location.origin}/forecast/\${coords} = "${url}" is available in dha cache...`);
+  return caches.match(url)
+  .then((response) => {
+    if(response){
+        console.log(`${sWho}(): SHEMP: Ain't bad, Moe, looks like we gots a response from dha cache for url = ${url}...retyonin' response.json() now...`);
+        return response.json();
+    }
+    console.log(`${sWho}(): SHEMP: Sorry, Moe, looks like we gots a falsie response from dha cache for url = ${url}...retyonin' null now...`);
+    return null;
+  })
+  .catch((err)=>{
+    console.error(`SHEMP: Sorry, Moe, error gettin' data from dha cache for url = "${url}", retoynin' null, FYI, err = `, err);
+    return null;
+  });
+}/* getForecastFromCache(coords) */
 
 /**
  * Get's the HTML element for the weather forecast, or clones the template
@@ -192,16 +223,31 @@ function getForecastCard(location) {
 /**
  * Gets the latest weather forecast data and updates each card with the
  * new data.
+ *
+ * Our weather app makes two asynchronous requests for data, one from the cache
+ * and one via a fetch().  If there's data in the cache, it will be returned and rendered
+ * extremely quickly(tens of milliseconds).  Then, when the fetch() 
+ * responds, the card will be updated with the freshest data directly from the weather API.
  */
 function updateData() {
+
+  let sWho = "updateData";
+
   Object.keys(weatherApp.selectedLocations).forEach((key) => {
     const location = weatherApp.selectedLocations[key];
     const card = getForecastCard(location);
+
     // CODELAB: Add code to call getForecastFromCache
+    getForecastFromCache(location.geo)
+       .then((forecast)=>{
+            console.log(`${sWho}(): SHEMP: Moe, getForecastFromCache() returns forecast = `, forecast );
+            renderForecast(card, forecast);
+       });
 
     // Get the forecast data from the network.
     getForecastFromNetwork(location.geo)
         .then((forecast) => {
+          console.log(`${sWho}(): SHEMP: Moe, getForecastFromNetwork() returns forecast = `, forecast );
           renderForecast(card, forecast);
         });
   });
